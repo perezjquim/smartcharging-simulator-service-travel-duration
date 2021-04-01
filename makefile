@@ -18,10 +18,30 @@ RABBIT_PORT=5672
 RABBIT_MANAGEMENT_PORT=15672
 # < CONSTANTS
 
-main: run-docker-model
+main: stop-docker-model run-docker-model
 
-# > MODEL1
-run-docker-model: stop-docker-model build-docker-model start-docker-model
+check-dependencies:
+	@echo '$(PATTERN_BEGIN) CHECKING DEPENDENCIES...'
+
+	@if ( pip3 list | grep -F pipreqs > /dev/null 2>&1 ) ; then \
+		echo "pipreqs already installed!" ; \
+	else \
+		echo "pipreqs not installed! installing..." && pip3 install pipreqs; \
+	fi	
+
+	@if ( dpkg -l pack-cli > /dev/null 2>&1 ) ; then \
+		echo "pack already installed!" ; \
+	else \
+		echo "pack not installed! please install..."; \
+		exit 1; \
+	fi			
+
+	@bash -c 'source ~/.profile'		
+
+	@echo '$(PATTERN_END) DEPENDENCIES CHECKED!'	
+
+# > MODEL
+run-docker-model: build-docker-model start-docker-model
 
 build-docker-model:
 	@echo '$(PATTERN_BEGIN) BUILDING `$(MODEL_CONTAINER_NAME)` PACK...'
@@ -63,7 +83,7 @@ stop-docker-model:
 	@( docker rm -f $(MODEL_CONTAINER_NAME) ) || true
 
 	@echo '$(PATTERN_END) `$(MODEL_CONTAINER_NAME)` PACK STOPPED!'	
-# < GATEWAY
+# < MODEL
 
 # > NAMEKO
 run-nameko-model: prep-nameko-model start-nameko-model
