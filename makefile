@@ -16,6 +16,8 @@ RABBIT_USER=guest
 RABBIT_PASSWORD=guest
 RABBIT_PORT=5672
 RABBIT_MANAGEMENT_PORT=15672
+
+TENSORFLOW_VERSION=1.15.0
 # < CONSTANTS
 
 main: stop-docker-model run-docker-model
@@ -47,7 +49,7 @@ build-docker-model:
 	@echo '$(PATTERN_BEGIN) BUILDING `$(MODEL_CONTAINER_NAME)` PACK...'
 
 	@pipreqs --force --savepath requirements.txt.tmp
-	@sed -i 's/tensorflow/tensorflow-cpu/g' requirements.txt.tmp
+	@sed -i 's/tensorflow==.*/tensorflow-cpu==$(TENSORFLOW_VERSION)/g' requirements.txt.tmp
 	@sort -r requirements.txt.tmp > requirements.txt.tmp.sorted
 	@if cmp -s requirements.txt.tmp.sorted requirements.txt; then :;\
 	else cp -f requirements.txt.tmp.sorted requirements.txt; fi
