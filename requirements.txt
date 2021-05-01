@@ -1,2 +1,2 @@
-tensorflow-cpu==1.15.0
+tensorflow==1.5.0
 nameko==3.0.0rc6

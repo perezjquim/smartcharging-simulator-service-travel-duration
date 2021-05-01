@@ -20,7 +20,7 @@ RABBIT_MANAGEMENT_PORT=15672
 TENSORFLOW_VERSION=1.5.0
 # < CONSTANTS
 
-main: stop-docker-model run-docker-model
+main: check-dependencies stop-docker-model run-docker-model
 
 check-dependencies:
 	@echo '$(PATTERN_BEGIN) CHECKING DEPENDENCIES...'
